@@ -1,0 +1,28 @@
+{
+  "name": "wowtalentassignment",
+  "version": "1.0.0",
+  "description": "interview Assignment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Srikant0052/WowTalentAssignment.git"
+  },
+  "author": "Srikant Kumar Mahato",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Srikant0052/WowTalentAssignment/issues"
+  },
+  "homepage": "https://github.com/Srikant0052/WowTalentAssignment#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.5.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.19"
+  }
+}
