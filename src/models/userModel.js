@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema({
     },
     user_id: {
         type: Number,
-        required: true,
         unique: true,
+        default:0
     },
     email_id: {
         type: String,
@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
         enum: ["Public", "Private"],
     },
     follower:{
-        type: String,
+        type: Array,
         default:[]
     }
 
