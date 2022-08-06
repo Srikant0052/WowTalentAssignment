@@ -9,6 +9,10 @@ const commentSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    post: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post'
     }
 }, { timestamps: true })
 

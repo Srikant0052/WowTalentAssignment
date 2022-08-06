@@ -15,14 +15,18 @@ const postSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+    user_id: {
+        type: Number,
+        ref: 'User',
+        required: true
     },
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comment'
     }],
+    post:{
+        type: String
+    },
     postStatus: {
         type: String,
         required: true,
