@@ -24,13 +24,24 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comment'
     }],
-    post:{
+    post: {
         type: String
     },
     postStatus: {
         type: String,
         required: true,
         enum: ["Public", "Private"]
+    },
+    likes: [{
+        type: String
+    }],
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    deletedAt: {
+        type: Date,
+        default: null
     }
 
 },
