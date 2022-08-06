@@ -144,4 +144,126 @@ const userLogin = async (req, res) => {
     }
 }
 
-module.exports = { userRegistration, userLogin, }
+const updateProfile = async (req, res) => {
+    try {
+        const user_id = req.params.user_id;
+        const userData = req.body;
+        
+
+        
+        if (!isValidRequestBody(userData)) {
+            return res.status(400).send({ status: "false", message: "Please provide required input fields" })
+        }
+
+        const isUserIdPresent = await userModel.findOne({ _id: user_id });
+        if (!isUserIdPresent) {
+            return res.status(404).send({ status: false, message: `User data not found with this Id ` });
+        }
+
+        //Authorization
+        if (req.user != isUserIdPresent._id) {
+            return res.status(403).send({ status: false, message: "You are not authorized" })
+        }
+
+        //Destructuring request object
+        let {  name, email_id, password, user_name, mobile, profile } = userData;
+
+
+        const updateUserData = {};
+
+        //name update
+        if ("name" in req.body) {
+            if (!isValid(name)) {
+                return res.status(400).send({ status: false, message: "name is required" })
+            }
+            if (!('$set' in updateUserData)) {
+                updateUserData["$set"] = {};
+            }
+            updateUserData['$set']['name'] = name
+        }
+       
+        //email update
+        if ("email_id" in req.body) {
+            if (!isValid(email_id)) {
+                return res.status(400).send({ status: false, message: "email is required" })
+            }
+            if (!emailRegex.test(email_id)) {
+                return res.status(400).send({ status: false, message: "Please provide valid email" })
+            }
+            let duplicateEmail = await userModel.findOne({ email_id: email_id })
+            if (duplicateEmail) {
+                return res.status(400).send({ status: false, message: `Email Already Present. Take another email` });
+            }
+            if (!('$set' in updateUserData)) {
+                updateUserData["$set"] = {};
+            }
+            updateUserData['$set']['email_id'] = email_id
+        }
+
+        //Password update
+        if ("password" in req.body) {
+            if (!isValid(password)) {
+                return res.status(400).send({ status: false, message: "password is required" })
+            }
+            if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/.test(password))) {
+                return res.status(400).send({ status: false, message: 'password should be valid password' });
+            }
+            
+            if (!('$set' in updateUserData)) {
+                updateUserData["$set"] = {};
+            }
+            const hash = bcrypt.hashSync(password, saltRounds)
+            updateUserData['$set']['password'] = hash
+        }
+
+        //Mobile number update
+        if ("mobile" in req.body) {
+            if (!isValid(phone)) {
+                return res.status(400).send({ status: false, message: "mobile number is required" })
+            }
+            if (!mobileRegex.test(mobile)) {
+                return res.status(400).send({ status: false, message: "Please provide valid mobile" })
+            }
+            let duplicateMobile = await userModel.findOne({ mobile: mobile });
+            if (duplicateMobile) {
+                return res.status(400).send({ status: false, message: `Phone Already Present. Take another Phone Number` });
+            }
+            if (!('$set' in updateUserData)) {
+                updateUserData["$set"] = {};
+            }
+            updateUserData['$set']['mobile'] = mobile
+        }
+
+           //name update
+           if ("user_name" in req.body) {
+            if (!isValid(user_name)) {
+                return res.status(400).send({ status: false, message: "user_name is required" })
+            }
+            if (!('$set' in updateUserData)) {
+                updateUserData["$set"] = {};
+            }
+            updateUserData['$set']['user_name'] = user_name;
+        }
+
+        //Profile update
+        if ("profile" in req.body) {
+            if (!isValid(profile)) {
+                return res.status(400).send({ status: false, message: "profile is required" })
+            }
+            if (!('$set' in updateUserData)) {
+                updateUserData["$set"] = {};
+            }
+            updateUserData['$set']['profile'] = profile
+        }
+       
+       
+        const updatedData = await userModel.findOneAndUpdate({  user_id }, updateUserData, { new: true });
+        res.status(200).send({ status: true, message: "User profile updated", data: updatedData });
+
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message });
+    }
+
+}
+
+module.exports = { userRegistration, userLogin,updateProfile };
